@@ -12,7 +12,18 @@ export const usePublicationsStore = () => {
         }
     };
 
+    const useGetSearchPublications = async (s) => {
+        try {
+            const { data } = await api.get(`/api/publication/search?s=${s}`)
+            return { ok: true , data}
+        } catch (error) {
+            console.error(error)
+            return { ok: false, data: error.response.data }
+        }
+    };
+
     return {
-        useGetPublications
+        useGetPublications,
+        useGetSearchPublications
     }
 }

@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
+
 import { HeaderGenerates } from '../components'
-import './PublicationsPages.css'
 import { ModalView } from '../../../components';
+
 import { DetailPublication } from '../detail';
+
 import { usePublicationsStore } from '../hooks';
+import './PublicationsPages.css'
 
 export const PublicationsPages = () => {
 
     const [openModal, setOpenModal] = useState(false);
     const [active, setActive] = useState(null);
+    const [search, setSearch] = useState('');
     const [data, setData] = useState([]);
 
     const {
-        useGetPublications
+        useGetPublications,
+        useGetSearchPublications
     } = usePublicationsStore();
 
     const dateConvert = (date) => {
@@ -30,18 +35,24 @@ export const PublicationsPages = () => {
         }
     };
 
-    const handleSearch = (value) => {
-        setSearch(value);
-    };
-
     const handleButton = (item) => {
         setActive(item);
         setOpenModal(true)
     };
 
     useEffect(() => {
-        GetPublications();
-    }, []);
+        if (search.length > 0) {
+            const GetSearchPublications = async () => {
+                const { ok, data } = await useGetSearchPublications(search);
+                if (ok) {
+                    setData(data);
+                }
+            };
+            GetSearchPublications();
+        } else {
+            GetPublications();
+        }
+    }, [search]);
 
     useEffect(() => {
         if (!openModal) {
@@ -51,7 +62,7 @@ export const PublicationsPages = () => {
 
     return (
         <>
-            <HeaderGenerates title="Publicaciones" onSearch={handleSearch} />
+            <HeaderGenerates title="Publicaciones" setSearch={setSearch} search={search} />
             <div className="grid-container"  >
                 {
                     data.map((item, index) => (

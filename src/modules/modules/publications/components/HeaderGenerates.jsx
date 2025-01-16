@@ -1,18 +1,7 @@
-import { useState } from 'react'
 import './HeaderGenerates.css'
 
 
-export const HeaderGenerates = ({ title = 'Cabecera general', onSearch }) => {
-
-    const [search, setSearch] = useState('');
-
-    const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearch(value);
-        if (onSearch) {
-            onSearch(value); // Enviar el valor al componente padre
-        }
-    };
+export const HeaderGenerates = ({ title = 'Cabecera general', setSearch, search }) => {
 
     return (
         <>
@@ -25,7 +14,7 @@ export const HeaderGenerates = ({ title = 'Cabecera general', onSearch }) => {
                         <input type="text"
                             placeholder="Buscar..."
                             value={search}
-                            onChange={handleSearchChange}
+                            onChange={(e) => { setSearch(e.target.value) }}
                         />
                     </div>
                 </div>
