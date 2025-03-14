@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { ModulesLayout, PublicationsPages } from '../modules'
 
 export const ModuleRoutes = () => {
@@ -10,6 +10,7 @@ export const ModuleRoutes = () => {
         <ModulesLayout>
             <Routes>
                 <Route path="/" element={<PublicationsPages />} />
+                <Route path="/*" element={<Navigate to="/" />} />
             </Routes>
         </ModulesLayout>
     )

@@ -1,19 +1,33 @@
-import { Route, Routes } from 'react-router-dom'
-import { ModuleRoutes } from '../modules'
+import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+
+import { AuthRoutes } from '../auth/routes';
+import { ModuleRoutes } from '../modules';
 
 export const AppRoutes = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    /* En este modulo se podría controlar las rutas en el caso de que se requiera hacer autenticaciones de usuarios
-    y también para poder manejar las rutas publicas y privadas en este caso solo vamos a trabajar con una ruta pero
-    en el caso de que se requiera se puede crear un modulo para las rutas publicas y otro para las rutas privadas */
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            setIsAuthenticated(true);
+        } else {
+            setIsAuthenticated(false);
+        }
+        setIsLoading(false);
+    }, []);
 
     return (
         <Routes>
-
-            {/* aquí se podrían poner las rutas publicas y con condiciones
-       de autenticación las rutas privadas  */}
-
-            <Route path="/*" element={<ModuleRoutes />} />
+            {
+                isAuthenticated ?
+                    <Route path="/*" element={<ModuleRoutes />} />
+                    :
+                    <Route path="/auth/*" element={<AuthRoutes />} />
+            }
+            <Route path="/*" element={<Navigate to="/auth/login" />} />
         </Routes>
-    )
-}
+    );
+};
